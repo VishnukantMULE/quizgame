@@ -30,7 +30,9 @@ class QuizController extends GetxController {
 
   void nextQuestion() {
     if (model.quetionNumber.value < 9) {
+
       model.quetionNumber.value++;
+      print("sssssssss${model.quetionNumber.value}");
       // Navigator.push(context, MaterialPageRoute(builder: (context)=>QuizView()))
     } else {
       model.quetionNumber.value;
@@ -47,4 +49,5 @@ class QuizController extends GetxController {
 
     }
   }
+
 }

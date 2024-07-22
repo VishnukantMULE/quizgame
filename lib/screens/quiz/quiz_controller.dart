@@ -1,4 +1,7 @@
 
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quizgame/models/quiz_response.dart';
 import 'package:quizgame/routes/app_routes.dart';
@@ -27,25 +30,34 @@ class QuizController extends GetxController {
 
   }
 
-  void checkAnswer(String selectedOption)
+  bool checkAnswer(String selectedOption)
   {
+    model.selectedOption.value=selectedOption;
     if(responseModel.results?[model.quetionNumber.value].correctAnswer==selectedOption)
       {
+        model.optionButtonColor.value=Colors.green;
         model.correctQuetions++;
+        return true;
       }
     else
       {
+        model.optionButtonColor.value=Colors.red;
         model.incorrectQuestions++;
+        return false;
       }
   }
 
-  void nextQuestion() {
+  void nextQuestion() async{
+
     if (model.quetionNumber.value < responseModel.results!.length-2) {
 
+
+      model.optionButtonColor.value=Colors.purple;
+      // await Future.delayed(const Duration(seconds: 3));
+
       model.quetionNumber.value++;
-      model.resetKey.value++;
       model.sollvedQuestions++;
-      model.timeDuration.value=0;
+
 
 
 
@@ -66,5 +78,17 @@ class QuizController extends GetxController {
 
     }
   }
+
+  void resetAniation()
+  {
+    model.key.value++;
+  }
+  void onPressedHandler(String option)
+  async{
+    checkAnswer(option);
+    resetAniation();
+    nextQuestion();
+  }
+
 
 }

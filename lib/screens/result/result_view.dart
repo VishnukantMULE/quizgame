@@ -182,10 +182,10 @@ class ResultView extends StatelessWidget {
           ),
 
 
-          // Padding(
-          //   padding: const EdgeInsets.all(20),
-          //   child: AppPrimaryButton(text: "Re-Test", onPressed: navigateRetest),
-          // )
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: AppPrimaryButton(text: "Re-Test", onPressed: navigateRetest),
+          )
 
 
         ],

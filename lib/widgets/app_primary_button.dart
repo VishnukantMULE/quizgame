@@ -4,6 +4,7 @@ import 'package:quizgame/theme/appcolors.dart';
 class AppPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  
   const AppPrimaryButton(
       {super.key, required this.text, required this.onPressed});
 

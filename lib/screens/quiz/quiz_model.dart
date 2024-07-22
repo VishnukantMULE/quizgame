@@ -9,5 +9,12 @@ class QuizModel
   RxInt timeDuration=0.obs;
   RxInt beginValue=0.obs;
   RxInt endValue=1.obs;
+  var resetKey=0.obs;
+
+
+  var sollvedQuestions=0.obs;
+  var correctQuetions=0.obs;
+  var incorrectQuestions=0.obs;
+  var totalQuestions;
 
 }

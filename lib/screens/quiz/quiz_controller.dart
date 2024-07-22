@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:quizgame/models/quiz_response.dart';
+import 'package:quizgame/routes/app_routes.dart';
 import 'package:quizgame/screens/quiz/quiz_model.dart';
-import 'package:quizgame/screens/quiz/quiz_view.dart';
 import 'package:quizgame/services/api_service/api_service.dart';
 
 class QuizController extends GetxController {
@@ -28,14 +27,32 @@ class QuizController extends GetxController {
 
   }
 
+  void checkAnswer(String selectedOption)
+  {
+    if(responseModel.results?[model.quetionNumber.value].correctAnswer==selectedOption)
+      {
+        model.correctQuetions++;
+      }
+    else
+      {
+        model.incorrectQuestions++;
+      }
+  }
+
   void nextQuestion() {
-    if (model.quetionNumber.value < 9) {
+    if (model.quetionNumber.value < responseModel.results!.length-2) {
 
       model.quetionNumber.value++;
-      print("sssssssss${model.quetionNumber.value}");
+      model.resetKey.value++;
+      model.sollvedQuestions++;
+      model.timeDuration.value=0;
+
+
+
       // Navigator.push(context, MaterialPageRoute(builder: (context)=>QuizView()))
     } else {
-      model.quetionNumber.value;
+      Get.offNamed(Routes.resultView);
+      // model.quetionNumber.value;
 
     }
   }

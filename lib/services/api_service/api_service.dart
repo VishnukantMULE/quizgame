@@ -11,7 +11,7 @@ class ApiService{
   {
     print("api response calll");
     try{
-      var res= await http.get(Uri.parse("https://opentdb.com/api.php?amount=10&type=multiple"));
+      var res= await http.get(Uri.parse("https://opentdb.com/api.php?amount=12&type=multiple"));
       if(res.statusCode==200)
         {
           print("api response got");

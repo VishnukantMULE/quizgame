@@ -1,14 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quizgame/screens/quiz/quiz_controller.dart';
 import 'package:quizgame/utils/html_parser.dart';
+import 'package:quizgame/widgets/option_button.dart';
 
-class QuizContainerView extends StatelessWidget {
+import '../../../routes/app_routes.dart';
+
+class QuizContainerView extends StatefulWidget {
   final String question;
   final String option_1;
   final String option_2;
   final String option_3;
   final String option_4;
+  final String totalQuestion;
+
 
   const QuizContainerView({
     super.key,
@@ -17,21 +23,33 @@ class QuizContainerView extends StatelessWidget {
     required this.option_2,
     required this.option_3,
     required this.option_4,
+    required this.totalQuestion,
   });
+
+  @override
+  State<QuizContainerView> createState() => _QuizContainerViewState();
+}
+
+class _QuizContainerViewState extends State<QuizContainerView> {
+  int key = 0;
+
+  void resetAnimation() {
+    setState(() {
+      key++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final QuizController quizcontroller = Get.find<QuizController>();
 
-    return ListView(
-      children:[
-
-
-        Container(
-        decoration: BoxDecoration(
-          // border: Border.all(color: Colors.black,width: 3)
-        ),
-        height: MediaQuery.of(context).size.height * 0.25, // Constrain height of the Stack
+    return ListView(children: [
+      Container(
+        decoration: const BoxDecoration(
+            // border: Border.all(color: Colors.black,width: 3)
+            ),
+        height: MediaQuery.of(context).size.height *
+            0.25, // Constrain height of the Stack
         child: Stack(
           alignment: Alignment.center,
           clipBehavior: Clip.none,
@@ -63,9 +81,62 @@ class QuizContainerView extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                 quizcontroller.model.correctQuetions.value.toString() ,
+                                  style: const TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const Icon(
+                                  CupertinoIcons.checkmark_rectangle_fill,
+                                  size: 30,
+                                  color: Colors.green,
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  CupertinoIcons.xmark_rectangle_fill,
+                                  size: 30,
+                                  color: Colors.red,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  quizcontroller.model.incorrectQuestions.value.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                         Text(
+                          "Qustions ${quizcontroller.model.sollvedQuestions}/${widget.totalQuestion}",
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple),
+                        ),
                         const SizedBox(height: 20),
                         Text(
-                          HtmltoTextParser().htmlDecoder(question),
+                          HtmltoTextParser().htmlDecoder(widget.question),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -85,17 +156,24 @@ class QuizContainerView extends StatelessWidget {
                   width: 100,
                   decoration: BoxDecoration(
                     color: Colors.white,
-
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.black, width: 1),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: TweenAnimationBuilder<double>(
+                      key: ValueKey(key),
                       tween: Tween<double>(begin: 0, end: 1),
                       duration: const Duration(seconds: 10),
-                      onEnd: quizcontroller.nextQuestion,
+                      onEnd: () {
+                        quizcontroller.nextQuestion();
+                        resetAnimation();
+                      },
                       builder: (context, value, child) {
+                        int finalVal = (value * 10).toInt();
+                        if (finalVal == 10) {
+                          quizcontroller.model.timeDuration.value = finalVal;
+                        }
                         return SizedBox(
                           width: 90,
                           height: 90,
@@ -117,15 +195,18 @@ class QuizContainerView extends StatelessWidget {
             Positioned(
               bottom: 45,
               child: TweenAnimationBuilder<double>(
+                key: ValueKey(key),
+                onEnd: resetAnimation,
                 tween: Tween<double>(begin: 0, end: 1),
                 duration: const Duration(seconds: 10),
                 builder: (context, value, child) {
                   int finalVal = (value * 10).toInt();
-                  quizcontroller.model.timeDuration.value = finalVal;
+
                   return Text(
                     finalVal.toString(),
                     style: const TextStyle(
                       fontSize: 40,
+                      color: Colors.purple,
                       fontWeight: FontWeight.bold,
                     ),
                   );
@@ -134,134 +215,46 @@ class QuizContainerView extends StatelessWidget {
             ),
           ],
         ),
-
-
       ),
-        const SizedBox(height: 180,),
-
-        Padding(
-          padding: const EdgeInsets.fromLTRB(30,10,30,10),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  fixedSize:
-                  Size(MediaQuery.of(context).size.width * 0.60, 60),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  side: const BorderSide(
-                      color: Colors.purpleAccent,
-                      width: 3
-                  )
-
-              ),
-              onPressed: () {
-                quizcontroller.nextQuestion();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(option_1,style: const TextStyle(
-                      fontSize: 25,color: Colors.black
-                  ),
-                  ),
-                  Icon(Icons.circle_outlined)
-                ],
-              )
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(30,10,30,10),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  fixedSize:
-                  Size(MediaQuery.of(context).size.width * 0.60, 60),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  side: const BorderSide(
-                      color: Colors.purpleAccent,
-                      width: 3
-                  )
-
-              ),
-              onPressed: () {
-                quizcontroller.nextQuestion();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(option_2,style: const TextStyle(
-                      fontSize: 25,color: Colors.black
-                  ),
-                  ),
-                  Icon(Icons.circle_outlined)
-                ],
-              )
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(30,10,30,10),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  fixedSize:
-                  Size(MediaQuery.of(context).size.width * 0.60, 60),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  side: const BorderSide(
-                      color: Colors.purpleAccent,
-                      width: 3
-                  )
-
-              ),
-              onPressed: () {
-                quizcontroller.nextQuestion();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(option_3,style: const TextStyle(
-                      fontSize: 25,color: Colors.black
-                  ),
-                  ),
-                  Icon(Icons.circle_outlined)
-                ],
-              )
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(30,10,30,10),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  fixedSize:
-                  Size(MediaQuery.of(context).size.width * 0.60, 60),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  side: const BorderSide(
-                      color: Colors.purpleAccent,
-                      width: 3
-                  )
-
-              ),
-              onPressed: () {
-                quizcontroller.nextQuestion();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(option_4,style: const TextStyle(
-                      fontSize: 25,color: Colors.black
-                  ),
-                  ),
-                  Icon(Icons.circle_outlined)
-                ],
-              )
-          ),
-        ),
-
-
-      ]
-    );
+      const SizedBox(
+        height: 180,
+      ),
+      OptionButton(
+        option: widget.option_1,
+        quizController: quizcontroller,
+        buttonPressed: () {
+          quizcontroller.checkAnswer(widget.option_1);
+          resetAnimation();
+          quizcontroller.nextQuestion();
+        },
+      ),
+      OptionButton(
+        option: widget.option_2,
+        quizController: quizcontroller,
+        buttonPressed: () {
+          quizcontroller.checkAnswer(widget.option_2);
+          resetAnimation();
+          quizcontroller.nextQuestion();
+        },
+      ),
+      OptionButton(
+        option: widget.option_3,
+        quizController: quizcontroller,
+        buttonPressed: () {
+          quizcontroller.checkAnswer(widget.option_3);
+          resetAnimation();
+          quizcontroller.nextQuestion();
+        },
+      ),
+      OptionButton(
+        option: widget.option_4,
+        quizController: quizcontroller,
+        buttonPressed: () {
+          quizcontroller.checkAnswer(widget.option_4);
+          resetAnimation();
+          quizcontroller.nextQuestion();
+        },
+      ),
+    ]);
   }
 }

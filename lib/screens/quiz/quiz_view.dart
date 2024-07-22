@@ -19,11 +19,13 @@ class QuizView extends StatelessWidget {
         } else {
           int index = controller.model.quetionNumber.value;
 
+
           var question = controller.responseModel.results?[index].question.toString();
           var opt_1 = controller.responseModel.results?[index].correctAnswer.toString();
           var opt_2 = controller.responseModel.results?[index].incorrectAnswers?[0].toString();
           var opt_3 = controller.responseModel.results?[index].incorrectAnswers?[1].toString();
           var opt_4 = controller.responseModel.results?[index].incorrectAnswers?[2].toString();
+          controller.model.totalQuestions=(controller.responseModel.results!.length-2).toString();
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -32,7 +34,7 @@ class QuizView extends StatelessWidget {
               option_1: opt_1!,
               option_2: opt_2!,
               option_3: opt_3!,
-              option_4: opt_4!,
+              option_4: opt_4!, totalQuestion: controller.model.totalQuestions,
             ),
           );
         }

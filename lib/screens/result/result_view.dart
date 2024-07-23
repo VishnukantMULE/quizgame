@@ -8,7 +8,8 @@ import 'package:quizgame/widgets/app_primary_button.dart';
 
 class ResultView extends StatelessWidget {
    ResultView({super.key});
-  final ResultController resultController=ResultController();
+  // final ResultController resultController=ResultController();
+
 
   void navigateRetest()
   {
@@ -17,6 +18,10 @@ class ResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ResultController resultController =Get.put(ResultController());
+    final Map<String,dynamic> resultData=Get.arguments;
+
+
     return Scaffold(
       body: ListView(
         children: [
@@ -75,13 +80,18 @@ class ResultView extends StatelessWidget {
 
                             children: <Widget>[
                               Container(
-                                child:const Padding(
+                                child: Padding(
                                   padding: EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
                                       Icon(Icons.circle,color: Colors.purpleAccent,),
                                       SizedBox(width: 10,),
-                                      Flexible(child: Text("100%   Completion",style: TextStyle(fontSize: 20,color: Colors.purpleAccent),))
+                                      Flexible(
+                                        child: Text(
+                                          "${resultData["solvedQuestions"]}0% Completion",
+                                          style: TextStyle(fontSize: 20, color: Colors.purpleAccent),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -93,31 +103,31 @@ class ResultView extends StatelessWidget {
                                     children: [
                                       Icon(Icons.circle,color: Colors.purpleAccent,),
                                       SizedBox(width: 10,),
-                                      Flexible(child: Text("${resultController.quizController.model.totalQuestions} Total Quetions",style: TextStyle(fontSize: 20,color: Colors.purpleAccent),))
+                                      Flexible(child: Text("${resultData["totalQuestions"].toString()} Total Quetions",style: TextStyle(fontSize: 20,color: Colors.purpleAccent),))
                                     ],
                                   ),
                                 ),
                               ),
                               Container(
-                                child:const Padding(
+                                child: Padding(
                                   padding: EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
                                       Icon(Icons.circle,color: Colors.green,),
                                       SizedBox(width: 10,),
-                                      Flexible(child: Text("13 Correct",style: TextStyle(fontSize: 20,color: Colors.green),))
+                                      Flexible(child: Text("${resultData["correctQuestions"].toString()} Correct",style: TextStyle(fontSize: 20,color: Colors.green),))
                                     ],
                                   ),
                                 ),
                               ),
                               Container(
-                                child:const Padding(
+                                child: Padding(
                                   padding: EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
                                       Icon(Icons.circle,color: Colors.red,),
                                       SizedBox(width: 10,),
-                                      Flexible(child: Text("07 Wrong",style: TextStyle(fontSize: 20,color: Colors.red),))
+                                      Flexible(child: Text("${resultData["incorrectQuestions"].toString()} Wrong",style: TextStyle(fontSize: 20,color: Colors.red),))
                                     ],
                                   ),
                                 ),

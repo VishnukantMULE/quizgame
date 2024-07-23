@@ -36,13 +36,13 @@ class QuizController extends GetxController {
     if(responseModel.results?[model.quetionNumber.value].correctAnswer==selectedOption)
       {
         model.optionButtonColor.value=Colors.green;
-        model.correctQuetions++;
+
         return true;
       }
     else
       {
         model.optionButtonColor.value=Colors.red;
-        model.incorrectQuestions++;
+
         return false;
       }
   }
@@ -51,19 +51,26 @@ class QuizController extends GetxController {
 
     if (model.quetionNumber.value < responseModel.results!.length-2) {
 
-
-      model.optionButtonColor.value=Colors.purple;
-      // await Future.delayed(const Duration(seconds: 3));
-
       model.quetionNumber.value++;
-      model.sollvedQuestions++;
+      resetAniation();
 
-
-
-
-      // Navigator.push(context, MaterialPageRoute(builder: (context)=>QuizView()))
     } else {
-      Get.offNamed(Routes.resultView);
+      // if (model.totalQuestions > 0) {
+      //   model.totalCompletion = ((model.solvedQuestions.value / model.totalQuestions) * 100).toInt();
+      // } else {
+      //   model.totalCompletion = 0;
+      // }
+      Map<String, dynamic> resultData={
+        'totalQuestions':model.totalQuestions,
+        'solvedQuestions':model.solvedQuestions.value,
+        'correctQuestions':model.correctQuetions.value,
+        'incorrectQuestions':model.incorrectQuestions.value,
+        'totalCompletion':model.totalCompletion
+      };
+      Get.offNamed(Routes.resultView,arguments: resultData);
+
+
+      // model.quetionNumber.value;
       // model.quetionNumber.value;
 
     }
@@ -78,17 +85,17 @@ class QuizController extends GetxController {
 
     }
   }
-
   void resetAniation()
   {
     model.key.value++;
   }
   void onPressedHandler(String option)
   async{
-    checkAnswer(option);
-    resetAniation();
+    bool isCorrect =checkAnswer(option);
+    await Future.delayed(const Duration(seconds: 1));
+    isCorrect? model.correctQuetions++:model.incorrectQuestions++;
     nextQuestion();
+    model.solvedQuestions++;
+
   }
-
-
 }

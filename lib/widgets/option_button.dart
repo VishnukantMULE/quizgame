@@ -57,6 +57,7 @@ class _OptionButtonState extends State<OptionButton> {
                     HtmltoTextParser().htmlDecoder(widget.option),
                     style: const TextStyle(fontSize: 25, color: Colors.black),
                   ),
+
                 ),
                  Icon(icondata,color: buttonBorderColor,)
               ],

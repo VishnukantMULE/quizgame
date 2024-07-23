@@ -1,7 +1,8 @@
-import 'package:quizgame/screens/quiz/quiz_controller.dart';
-import 'package:quizgame/screens/quiz/quiz_model.dart';
+import 'package:get/get.dart';
+import 'package:quizgame/screens/result/result_model.dart';
 
-class ResultController{
-  QuizModel quizModel=QuizModel();
-  QuizController quizController=QuizController();
+class ResultController extends GetxController
+{
+  ResultModel resultModel=ResultModel();
+
 }

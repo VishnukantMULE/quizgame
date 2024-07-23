@@ -125,7 +125,7 @@ class _QuizContainerViewState extends State<QuizContainerView> {
                             height: 20,
                           ),
                           Text(
-                            "Qustions ${quizcontroller.model.sollvedQuestions}/${widget.totalQuestion}",
+                            "Qustions ${quizcontroller.model.quetionNumber}/${widget.totalQuestion}",
                             style: const TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
@@ -168,10 +168,7 @@ class _QuizContainerViewState extends State<QuizContainerView> {
 
                         },
                         builder: (context, value, child) {
-                          int finalVal = (value * 10).toInt();
-                          if (finalVal == 10) {
-                            quizcontroller.model.timeDuration.value = finalVal;
-                          }
+
                           return SizedBox(
                             width: 90,
                             height: 90,
@@ -216,7 +213,7 @@ class _QuizContainerViewState extends State<QuizContainerView> {
         );
       }),
       const SizedBox(
-        height: 180,
+        height: 220,
       ),
       OptionButton(
         option: widget.option_1,
